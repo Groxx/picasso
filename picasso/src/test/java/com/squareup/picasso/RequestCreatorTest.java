@@ -228,6 +228,12 @@ public class RequestCreatorTest {
     assertThat(actionCaptor.getValue().getPriority()).isEqualTo(HIGH);
   }
 
+  @Test public void targetActionWithMinimizeHeapFragmentation() {
+    new RequestCreator(picasso, URI_1, 0).minimizeHeapFragmentation(true).into(mockTarget());
+    verify(picasso).enqueueAndSubmit(actionCaptor.capture());
+    assertThat(actionCaptor.getValue().getRequest().inInputShareableAndPurgeable).isEqualTo(true);
+  }
+
   @Test public void targetActionWithDefaultTag() {
     new RequestCreator(picasso, URI_1, 0).into(mockTarget());
     verify(picasso).enqueueAndSubmit(actionCaptor.capture());
