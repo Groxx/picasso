@@ -83,11 +83,17 @@ public final class Request {
   public final Bitmap.Config config;
   /** The priority of this request. */
   public final Priority priority;
+  /**
+   * Whether or not both {@link android.graphics.BitmapFactory.Options#inInputShareable}
+   * and {@link android.graphics.BitmapFactory.Options#inPurgeable} will be set.
+   */
+  public final boolean inInputShareableAndPurgeable;
 
   private Request(Uri uri, int resourceId, String stableKey, List<Transformation> transformations,
       int targetWidth, int targetHeight, boolean centerCrop, boolean centerInside,
       boolean onlyScaleDown, float rotationDegrees, float rotationPivotX, float rotationPivotY,
-      boolean hasRotationPivot, Bitmap.Config config, Priority priority) {
+      boolean hasRotationPivot, Bitmap.Config config, Priority priority,
+      boolean inInputShareableAndPurgeable) {
     this.uri = uri;
     this.resourceId = resourceId;
     this.stableKey = stableKey;
@@ -107,6 +113,7 @@ public final class Request {
     this.hasRotationPivot = hasRotationPivot;
     this.config = config;
     this.priority = priority;
+    this.inInputShareableAndPurgeable = inInputShareableAndPurgeable;
   }
 
   @Override public String toString() {
@@ -204,6 +211,7 @@ public final class Request {
     private List<Transformation> transformations;
     private Bitmap.Config config;
     private Priority priority;
+    private boolean inInputShareableAndPurgeable;
 
     /** Start building a request using the specified {@link Uri}. */
     public Builder(Uri uri) {
@@ -239,6 +247,7 @@ public final class Request {
       }
       config = request.config;
       priority = request.priority;
+      inInputShareableAndPurgeable = request.inInputShareableAndPurgeable;
     }
 
     boolean hasImage() {
@@ -415,6 +424,11 @@ public final class Request {
       return this;
     }
 
+    public Builder inInputShareableAndPurgeable(boolean inInputShareableAndPurgeable) {
+      this.inInputShareableAndPurgeable = inInputShareableAndPurgeable;
+      return this;
+    }
+
     /**
      * Add a custom transformation to be applied to the image.
      * <p>
@@ -452,7 +466,7 @@ public final class Request {
       }
       return new Request(uri, resourceId, stableKey, transformations, targetWidth, targetHeight,
           centerCrop, centerInside, onlyScaleDown, rotationDegrees, rotationPivotX, rotationPivotY,
-          hasRotationPivot, config, priority);
+          hasRotationPivot, config, priority, inInputShareableAndPurgeable);
     }
   }
 }

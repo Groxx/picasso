@@ -139,6 +139,13 @@ public abstract class RequestHandler {
         options.inPreferredConfig = data.config;
       }
     }
+    if (data.inInputShareableAndPurgeable) {
+      if (options == null) {
+        options = new BitmapFactory.Options();
+      }
+      options.inInputShareable = true;
+      options.inPurgeable = true;
+    }
     return options;
   }
 

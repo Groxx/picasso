@@ -64,6 +64,7 @@ public class RequestCreator {
   private Drawable placeholderDrawable;
   private Drawable errorDrawable;
   private Object tag;
+  private boolean inShareAndPurgeable;
 
   RequestCreator(Picasso picasso, Uri uri, int resourceId) {
     if (picasso.shutdown) {
@@ -156,6 +157,12 @@ public class RequestCreator {
       throw new IllegalStateException("Error image already set.");
     }
     this.errorDrawable = errorDrawable;
+    return this;
+  }
+
+
+  public RequestCreator purgeable(boolean setInputShareableAndPurgeable) {
+    this.inShareAndPurgeable = setInputShareableAndPurgeable;
     return this;
   }
 
@@ -288,6 +295,20 @@ public class RequestCreator {
    */
   public RequestCreator priority(Priority priority) {
     data.priority(priority);
+    return this;
+  }
+
+  /**
+   * Sets (or clears) both {@link android.graphics.BitmapFactory.Options#inInputShareable}
+   * and {@link android.graphics.BitmapFactory.Options#inPurgeable} for requests.
+   * <p>
+   * This value does nothing on Lollipop+, and it comes with possible view-drawing performance
+   * costs, if memory in use is cleared at an inconvenient time by the system.  It is NOT
+   * recommended to use this in general, though for devices with very little memory it can
+   * significantly decrease heap fragmentation, possibly reducing OOM errors.
+   */
+  public RequestCreator minimizeHeapFragmentation(boolean inInputShareableAndPurgeable) {
+    data.inInputShareableAndPurgeable(inInputShareableAndPurgeable);
     return this;
   }
 
